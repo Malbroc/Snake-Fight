@@ -1,0 +1,38 @@
+GENET Martin
+
+Compte rendu de l'avancement
+
+La structure générale du jeu est completement finie et s'adapte pour 1 à 2 joueurs. Pour plus de joueurs,
+il faudrait revoir la façon de placer les serpents à leur initialisation (position au hasard par exemple).
+Du point de vue du moteur, on peut mettre autant de serpent que la grille peut en contenir à priori.
+
+Compte rendu des algorithmes pour le joueur machine
+
+Evitement :
+	
+	Pour gérer l'évitement de l'auto-blocage et du blocage par un ou plusieurs ennemis, l'algorithme
+	que j'ai mis en oeuvre fonctionne sur une évaluation de chaque mouvement pour trouver celui qui
+	offre le plus de possibilités par la suite.
+
+	Prenons N un nombre proche de la dixaine (l'algorithme ne permet pas plus pour des raisons de
+	mémoire).
+	A partir de la position courante de la tete du serpent, on va donc vérifier, pour chaque direction
+	différente de celle d'où vient le serpent, si la case suivante est libre. Si c'est le cas, on marque
+	cette case, on note +1 pour le mouvement, puis on évalue récursivement les mouvements possibles depuis
+	cette nouvelle position en décrémentant N. A la fin d'une évaluation, on démarque les cases parcourues.
+	Ainsi, l'évaluation en une direction X s'arrête si X donne sur un cul de sac ou si N vaut 0.
+	
+	Cette évaluation est donc lancée pour chaque mouvement possible et on récupère le score ainsi donné pour
+	les mouvements possibles de la tete du serpent, et on sélectionne le meilleur (la direction au score le
+	plus élevé) pour proposer un mouvement au moteur.
+	
+Comportement agressif (non implémenté) :
+
+	Je pense essayer de savoir si la tete du serpent ennemi est dans un couloir afin de fermer ce couloir.
+	Cela est possible seulement si l'un des murs du couloir est constitué du corps du serpent machine lui-
+	même.
+	J'imagine que l'implémentation d'une fonction cherchant à savoir si les corps, ou une partie des corps,
+	de chaque serpent sont parallèles (à une unité d'écart) pour former un couloir avec un quelconque autre
+	mur permettrait de mettre en place un tel comportement.
+	Il faudrait ainsi faire l'appel de cette fonction avant l'appel de l'évaluation décrite précédemment, que
+	l'on appelerait alors seulement si la recherche d'angle d'attaque ne donne rien.
